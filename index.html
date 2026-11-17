@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Replicate Image Generator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container">
+    <header class="app-header">
+      <div class="badge">Replicate Proxy Demo</div>
+      <h1>AI Image Generator</h1>
+      <p class="subtitle">Generate images directly from the browser using Replicate via proxy</p>
+    </header>
+
+    <main class="card">
+      <form id="generator-form">
+        <label for="prompt-input" class="form-label">Prompt</label>
+        <div class="input-group">
+          <input type="text" id="prompt-input" name="prompt" placeholder="Describe what you want to see..."
+            value="A student trying to learn how use a machine learning API" autocomplete="off" required />
+          <button type="submit" id="submit-btn" class="btn btn-primary">
+            <span class="btn-text">Ask</span>
+            <span class="spinner" aria-hidden="true"></span>
+          </button>
+        </div>
+
+        <div class="presets">
+          <span class="preset-label">Quick examples:</span>
+          <button type="button" class="preset-pill" data-prompt="A futuristic city in neon watercolor style">City at
+            Night</button>
+          <button type="button" class="preset-pill"
+            data-prompt="Cute robotic cat reading a book in a cozy library">Robot Cat</button>
+          <button type="button" class="preset-pill"
+            data-prompt="Minimalist geometric landscape with sunset gradient">Retro Sunset</button>
+        </div>
+
+        <!-- Optional settings toggle -->
+        <details class="settings-details">
+          <summary>API & Model Options</summary>
+          <div class="settings-grid">
+            <div class="form-field">
+              <label for="model-name">Model</label>
+              <select id="model-select">
+                <option value="google/nano-banana-2" selected>google/nano-banana-2 (Fast, default)</option>
+                <option value="black-forest-labs/flux-schnell">black-forest-labs/flux-schnell</option>
+                <option value="stability-ai/sdxl">stability-ai/sdxl</option>
+                <option value="custom">Custom model...</option>
+              </select>
+              <input type="text" id="model-name" value="google/nano-banana-2" class="hidden"
+                placeholder="e.g. owner/model-name" />
+            </div>
+            <div class="form-field">
+              <label for="aspect-ratio">Aspect Ratio</label>
+              <select id="aspect-ratio">
+                <option value="1:1" selected>1:1 (Square)</option>
+                <option value="16:9">16:9 (Landscape)</option>
+                <option value="9:16">9:16 (Portrait)</option>
+                <option value="4:3">4:3 (Classic)</option>
+              </select>
+            </div>
+            <div class="form-field full-width">
+              <label for="proxy-url">Proxy Endpoint</label>
+              <input type="url" id="proxy-url" value="https://itp-ima-replicate-proxy.web.app/api/create_n_get" />
+            </div>
+          </div>
+        </details>
+      </form>
+
+      <section class="result-section">
+        <div id="status-bar" class="status-bar">
+          <span class="status-dot"></span>
+          <span id="status-text">Ready to generate</span>
+          <span id="timer" class="timer"></span>
+        </div>
+
+        <div id="image-container" class="image-wrapper empty">
+          <div class="placeholder">
+            <svg class="placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+              <polyline points="21 15 16 10 5 21"></polyline>
+            </svg>
+            <p>Your generated picture will appear here</p>
+          </div>
+          <img id="result-image" alt="Generated visual" title="Click to view full size" />
+        </div>
+
+        <div id="image-actions" class="image-actions hidden">
+          <button type="button" id="download-btn" class="btn btn-secondary">
+            ⬇ Download Image
+          </button>
+          <button type="button" id="copy-url-btn" class="btn btn-secondary">
+            🔗 Copy Link
+          </button>
+          <button type="button" id="view-full-btn" class="btn btn-secondary">
+            🔍 Full Size
+          </button>
+        </div>
+
+        <div id="error-message" class="error-box hidden"></div>
+
+        <!-- History Gallery -->
+        <div id="history-section" class="history-section hidden">
+          <div class="history-header">
+            <h3>Recent Generations</h3>
+            <button type="button" id="clear-history-btn" class="btn-text-link">Clear</button>
+          </div>
+          <div id="history-gallery" class="history-gallery"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Fullscreen Lightbox Modal -->
+  <div id="lightbox-modal" class="lightbox-modal hidden">
+    <div class="lightbox-backdrop"></div>
+    <div class="lightbox-content">
+      <button type="button" id="lightbox-close" class="lightbox-close" aria-label="Close modal">&times;</button>
+      <img id="lightbox-image" alt="Full size preview" />
+      <p id="lightbox-caption" class="lightbox-caption"></p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
